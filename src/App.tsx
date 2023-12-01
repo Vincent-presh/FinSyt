@@ -15,22 +15,33 @@ export const App = () => {
 
   const Pages = (index: number) => {
     return (
-       
-      <div className="w-[100%]"> {pages[index]}</div>
+      <div className="w-[100%]"> 
+        {pages[index]}
+      </div>
     )
   }
+
   const style = () => ({
-    transform: `translateX(${(-currentIndex * 30)}vw)`,
+    transform: `translateX(${(-currentIndex * 100)}vw)`,
     transition: "transform ease 0.3s"
-   })
+  })
 
 
   return (
-   <div className='w-full h-screen'>
-      <div className="w-[355%] flex overflow-x-hidden" style={style()}>  
+   <div 
+    className='w-full  h-screen overflow-x-hidden'
+    >
+      <div 
+        className="w-[700%] h-screen flex overflow-x-hidden" 
+        style={style()}
+      >  
          {
             pages.map((_:any, index: number) => (
-               <div className="basis-[100%] flex-1">{Pages(index)}</div>
+               <div 
+                  className="basis-[100%] flex-1"
+                >
+                  {Pages(index)}
+                </div>
             ))
          }
          </div>   
