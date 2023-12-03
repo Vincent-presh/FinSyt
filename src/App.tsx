@@ -15,11 +15,7 @@ export const App = () => {
   const {currentIndex, setCurrentIndex}: any = useContext(PagesContext);
 
   const Pages = (index: number) => {
-    return <div className="w-[100%]">{pages[index]}</div>;
-  };
-
-  const ToastContainer = () => {
-    return <ToastContainer />;
+    return <div className="w-[100%] ">{pages[index]}</div>;
   };
 
   const style = () => ({
@@ -29,7 +25,8 @@ export const App = () => {
 
   return (
     <div className="w-full  h-screen overflow-x-hidden">
-      <div className="w-[700%] h-screen flex overflow-x-hidden" style={style()}>
+      <ToastContainer position="top-center" />
+      <div className="w-[800%] h-screen flex overflow-x-hidden" style={style()}>
         {pages.map((_: any, index: number) => (
           <div className="basis-[100%] flex-1">{Pages(index)}</div>
         ))}

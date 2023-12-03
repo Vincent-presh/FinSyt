@@ -6,17 +6,13 @@ import {Income} from "../pages/Income";
 import {Debt} from "../pages/Debt";
 import {Spendables} from "../pages/Spendables";
 import {TransHistory} from "../pages/TransHistory";
+import {Login} from "../pages/Login";
 
 // Define the context interface
 interface PagesContextType {
   pages: ReactNode[];
   currentIndex: number;
-  ContinuetoRelationship: () => void;
-  ContinuetoDependants: () => void;
-  ContinuetoIncome: () => void;
-  ContinuetoDebt: () => void;
-  ContinuetoSpendables: () => void;
-  ContinuetoTransHistory: () => void;
+  nextPage: () => void;
 }
 
 // Create the context with an initial null value
@@ -26,6 +22,7 @@ export const PagesProvider = ({children}: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const pages = [
+    <Login />,
     <Gender />,
     <Relationship />,
     <Dependants />,
@@ -34,24 +31,8 @@ export const PagesProvider = ({children}: any) => {
     <Spendables />,
     <TransHistory />,
   ];
-
-  const ContinuetoRelationship = () => {
-    setCurrentIndex(currentIndex + 1);
-  };
-  const ContinuetoDependants = () => {
-    setCurrentIndex(currentIndex + 2);
-  };
-  const ContinuetoIncome = () => {
-    setCurrentIndex(currentIndex + 3);
-  };
-  const ContinuetoDebt = () => {
-    setCurrentIndex(currentIndex + 4);
-  };
-  const ContinuetoSpendables = () => {
-    setCurrentIndex(currentIndex + 5);
-  };
-  const ContinuetoTransHistory = () => {
-    setCurrentIndex(currentIndex + 6);
+  const nextPage = (index?: number) => {
+    setCurrentIndex(index ? index : currentIndex + 1);
   };
 
   return (
@@ -59,12 +40,7 @@ export const PagesProvider = ({children}: any) => {
       value={{
         pages,
         currentIndex,
-        ContinuetoDebt,
-        ContinuetoDependants,
-        ContinuetoIncome,
-        ContinuetoRelationship,
-        ContinuetoSpendables,
-        ContinuetoTransHistory,
+        nextPage,
       }}
     >
       {children}

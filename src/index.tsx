@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import {App} from './App';
-import reportWebVitals from './reportWebVitals';
-import { PagesProvider } from './contexts/PagesProvider';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import {App} from "./App";
+import reportWebVitals from "./reportWebVitals";
+import {PagesProvider} from "./contexts/PagesProvider";
+import {UserProvider} from "./contexts/userProvider";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <PagesProvider>
-    <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </PagesProvider>
   </React.StrictMode>
 );
