@@ -20,7 +20,7 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import {Conversation, Message} from "../interfaces/User";
+import {Conversation, Message, User} from "../interfaces/User";
 import {UserContext} from "./userProvider";
 import axios from "axios";
 
@@ -163,7 +163,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     onChange: (conversation: Conversation) => void
   ) => {
     const conversationRef: any = doc(db, "conversations", conversationId);
-    return onSnapshot(conversationRef, (doc) => {
+    return onSnapshot(conversationRef, (doc: any) => {
       const conversation = {id: doc.id, ...doc.data()} as Conversation;
       onChange(conversation);
     });
