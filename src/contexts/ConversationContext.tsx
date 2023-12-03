@@ -21,9 +21,27 @@ import {
   query,
 } from "firebase/firestore";
 import {Conversation, Message} from "../interfaces/User";
+import {UserContext} from "./userProvider";
+import axios from "axios";
+
+interface OpenAIResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  choices: Array<{
+    text: string;
+    index: number;
+    logprobs: any;
+    finish_reason: string;
+  }>;
+}
 
 interface ConversationContextType {
-  createConversation: (participants: string[]) => Promise<void>;
+  createConversation: (
+    participants: string[],
+    userMessage: string
+  ) => Promise<void>;
   sendMessage: (conversationId: string, message: Message) => Promise<void>;
   listenToConversation: (
     conversationId: string,
@@ -35,6 +53,8 @@ interface ConversationContextType {
 const ConversationContext = createContext<ConversationContextType | null>(null);
 
 export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {user}: any = useContext(UserContext);
   const db = getFirestore();
 
   function createIntroContext(user: User): string {
@@ -78,9 +98,57 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     return introContext;
   }
 
-  const createConversation = async (participants: string[]) => {
-    const newConversation: Conversation = {participants, messages: []};
+  async function callOpenAI(context: Message[]): Promise<OpenAIResponse> {
+    const API_URL = "https://api.openai.com/v1/chat/completions"; // Replace with the appropriate API endpoint
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is set in your environment variables
+
+    try {
+      const response = await axios.post(
+        API_URL,
+        {
+          model: "gpt-3.5-turbo",
+          messages: context,
+          max_tokens: 150, // Adjust based on your requirements
+          // Add other parameters as needed
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error calling OpenAI API:", error);
+      throw error;
+    }
+  }
+
+  const createConversation = async (
+    participants: string[],
+    userMessage: string
+  ) => {
+    setIsLoading(true);
+    const userIntro = createIntroContext(user);
+    let messages = [
+      {
+        role: "system",
+        content: "You are a financial assistant for this user: " + userIntro,
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ];
+    const newConversation: Conversation = {
+      participants,
+      messages: messages,
+    };
     await setDoc(doc(collection(db, "conversations")), newConversation);
+    await callOpenAI(messages);
+    setIsLoading(false);
   };
 
   const sendMessage = async (conversationId: string, message: Message) => {

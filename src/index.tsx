@@ -5,6 +5,7 @@ import {App} from "./App";
 import reportWebVitals from "./reportWebVitals";
 import {PagesProvider} from "./contexts/PagesProvider";
 import {UserProvider} from "./contexts/userProvider";
+import {ConversationProvider} from "./contexts/ConversationContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,7 +14,9 @@ root.render(
   <React.StrictMode>
     <PagesProvider>
       <UserProvider>
-        <App />
+        <ConversationProvider>
+          <App />
+        </ConversationProvider>
       </UserProvider>
     </PagesProvider>
   </React.StrictMode>

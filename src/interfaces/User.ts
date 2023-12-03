@@ -13,13 +13,14 @@ export interface User {
 }
 
 export interface Message {
-  senderId: string;
-  text: string;
-  timestamp: any;
+  role: string;
+  senderId?: string;
+  content?: string;
 }
 
 export interface Conversation {
   id?: string;
   participants: string[];
   messages: Message[];
+  timestamp?: any;
 }
