@@ -17,12 +17,31 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
+      nextPage(8);
+      return;
+      console.log(user);
       if (!user?.gender) {
         nextPage();
         return;
       }
       if (!user?.relationship) {
         nextPage(2);
+        return;
+      }
+      if (!user?.dependants) {
+        nextPage(3);
+        return;
+      }
+      if (!user?.income) {
+        nextPage(4);
+        return;
+      }
+      if (!user?.debt) {
+        nextPage(5);
+        return;
+      }
+      if (!user?.spendables) {
+        nextPage(6);
         return;
       }
     }

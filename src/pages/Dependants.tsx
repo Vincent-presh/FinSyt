@@ -1,11 +1,12 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Background} from "../components/ui/Background";
 import {BtnUI} from "../components/ui/Btn";
 import {Logo} from "../components/ui/Logo";
 import {Title} from "../components/ui/Title";
 import {InputBtn} from "../components/ui/InputBtn";
-import { PagesContext } from "../contexts/PagesProvider";
-import { UserContext } from "../contexts/userProvider";
+import {PagesContext} from "../contexts/PagesProvider";
+import {UserContext} from "../contexts/userProvider";
+import {updateUserDependants} from "../functions/updateUserFunctions";
 
 export const Dependants = () => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -15,6 +16,19 @@ export const Dependants = () => {
     {title: "Yess", name: "I have dependants"},
     {title: "No", name: "I dont have dependants"},
   ];
+
+  useEffect(() => {
+    if (selectedOption == "") {
+      return;
+    }
+    updateUserDependants(user?.id, selectedOption)
+      .then(() => {
+        console.log("Dependants updated successfully.");
+      })
+      .catch((error) => {
+        console.error("Error updating Dependants:", error);
+      });
+  }, [selectedOption, user]);
 
   return (
     <Background>
@@ -38,12 +52,12 @@ export const Dependants = () => {
           </div>
         </section>
         <section className="mt-5">
-          <BtnUI 
-            type={"primary"} 
-            title={"Continue"} 
+          <BtnUI
+            type={"primary"}
+            title={"Continue"}
             onClick={() => {
               nextPage();
-            }} 
+            }}
           />
         </section>
       </main>

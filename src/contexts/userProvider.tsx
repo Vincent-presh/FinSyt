@@ -21,6 +21,7 @@ import {toast} from "react-toastify";
 
 import * as firebase from "firebase/app";
 import "firebase/auth"; // Import other services you might use e.g., firestore, storage
+import {db} from "../firebase";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -52,11 +53,27 @@ export const UserContext = createContext<UserContextType | null | undefined>(
   null
 );
 
+export const fetchUserData = async (userId: string): Promise<User | null> => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      return userSnap.data() as User;
+    } else {
+      console.log("No such user found!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
 // Define the provider component
 export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
   const [user, setUser] = useState<User | null>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const db = getFirestore();
 
   const googleSignIn = async (): Promise<boolean | undefined> => {
     try {
@@ -144,18 +161,10 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
 
   useEffect(() => {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        let auth_user = {
-          email: user.email,
-          name: user?.displayName,
-          id: user?.uid,
-          metadata: {
-            creationTime: user.metadata?.creationTime,
-            lastSignInTime: user.metadata?.lastSignInTime,
-          },
-        };
-        setUser(auth_user);
+        setUser(await fetchUserData(user.uid));
       }
     });
   }, []);
