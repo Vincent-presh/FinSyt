@@ -17,6 +17,8 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
+      nextPage(8);
+      return;
       if (!user?.gender) {
         nextPage();
         return;

@@ -7,6 +7,7 @@ import {Debt} from "../pages/Debt";
 import {Spendables} from "../pages/Spendables";
 import {TransHistory} from "../pages/TransHistory";
 import {Login} from "../pages/Login";
+import {ChatPage} from "../pages/ChatPage";
 
 // Define the context interface
 interface PagesContextType {
@@ -30,6 +31,7 @@ export const PagesProvider = ({children}: any) => {
     <Debt />,
     <Spendables />,
     <TransHistory />,
+    <ChatPage />,
   ];
   const nextPage = (index?: number) => {
     setCurrentIndex(index ? index : currentIndex + 1);

@@ -40,15 +40,17 @@ if (!firebase.getApps.length) {
 
 // Define the context type
 interface UserContextType {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  signIn: () => Promise<boolean>;
+  user: User | null | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>;
+  signIn: () => Promise<boolean | undefined>;
   updateUser: (updatedUserInfo: Partial<User>) => Promise<boolean>;
   isLoading: boolean;
 }
 
 // Create the context with an initial empty value
-export const UserContext = createContext<UserContextType | null>(null);
+export const UserContext = createContext<UserContextType | null | undefined>(
+  null
+);
 
 // Define the provider component
 export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
@@ -69,13 +71,13 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
           console.log(token);
           // The signed-in user info.
           const user = result.user;
-          if (user) {
+          if (user && user.email !== undefined) {
             const isNewUser =
               new Date(user.metadata?.creationTime || "")?.getTime() ===
               new Date(user.metadata?.lastSignInTime || "")?.getTime();
-            let auth_user = {
-              email: user.email,
-              name: user?.displayName,
+            let auth_user: User = {
+              email: user.email as string,
+              name: user?.displayName as string,
               id: user?.uid,
               metadata: {
                 creationTime: user.metadata?.creationTime,
@@ -120,7 +122,7 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
   const updateUser = async (
     updatedUserInfo: Partial<User>
   ): Promise<boolean> => {
-    if (!user) return;
+    if (!user) return false;
 
     try {
       // Update user document in Firestore
