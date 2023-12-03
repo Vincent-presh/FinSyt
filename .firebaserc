@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "finsyt"
-  }
+    "default": "finsyt",
+    "prod": "finsyt"
+  },
+  "targets": {},
+  "etags": {}
 }

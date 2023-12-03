@@ -128,8 +128,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     conversationId: string
   ): Promise<OpenAIResponse> {
     const API_URL = "https://api.openai.com/v1/chat/completions"; // Replace with the appropriate API endpoint
-    const OPENAI_API_KEY =
-      "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"; // Ensure the API key is set in your environment variables
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is set in your environment variables
     console.log(context);
     try {
       const response = await axios.post(
