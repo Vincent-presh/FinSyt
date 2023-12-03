@@ -10,6 +10,7 @@ import {UserContext} from "../../contexts/userProvider";
 export const ChatInput = ({
   setCurrentConversation,
   currentConversation,
+  messages,
 }: any) => {
   const [message, setMessage] = useState("");
   const {createConversation, sendMessage} = useContext(ConversationContext);
@@ -33,10 +34,14 @@ export const ChatInput = ({
               if (currentConversation == "") {
                 createConversation([user.id], message, setCurrentConversation);
               } else {
-                sendMessage(currentConversation, {
-                  role: "user",
-                  content: message,
-                });
+                sendMessage(
+                  currentConversation,
+                  {
+                    role: "user",
+                    content: message,
+                  },
+                  messages
+                );
               }
             }
           }}

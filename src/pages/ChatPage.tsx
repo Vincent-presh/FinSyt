@@ -44,7 +44,7 @@ export const ChatPage = () => {
   useEffect(() => {
     let conversation = {...conversations_e};
     if (conversation.messages) {
-      let messages = conversation.messages.slice(1);
+      let messages = conversation.messages;
       setMessages(messages);
     }
   }, [conversations_e]);
@@ -90,7 +90,7 @@ export const ChatPage = () => {
             <div>{user?.name}</div>
           </div>
           <div className=" sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20 overflow-auto pb-24">
-            {messages?.map((item, index) => (
+            {messages?.slice(1)?.map((item, index) => (
               <div className=" space-x-5">
                 <div className="rounded-full h-8 w-8 ">
                   {item.role == "user" ? (
@@ -100,7 +100,13 @@ export const ChatPage = () => {
                       className="rounded-full mt-2 h-8 w-8"
                     />
                   ) : (
-                    <></>
+                    <img
+                      src={
+                        "https://firebasestorage.googleapis.com/v0/b/finsyt.appspot.com/o/images.png?alt=media&token=1cd98a77-2a5c-416e-b5fa-546e8c835053"
+                      }
+                      alt="profile"
+                      className="rounded-full mt-2 h-8 w-8"
+                    />
                   )}
                 </div>
                 <div className="flex-1 my-2 bg-slate-50  p-3 rounded-lg border border-grey-100 flex items-center text-sm text-primaryLight ">
@@ -112,6 +118,7 @@ export const ChatPage = () => {
           <ChatInput
             currentConversation={currentConversation}
             setCurrentConversation={setCurrentConversation}
+            messages={messages}
           />
         </div>
       </div>

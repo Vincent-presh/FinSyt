@@ -43,7 +43,11 @@ interface ConversationContextType {
     userMessage: string,
     setCurrentConversation: any
   ) => Promise<void>;
-  sendMessage: (conversationId: string, message: Message) => Promise<void>;
+  sendMessage: (
+    conversationId: string,
+    message: Message,
+    previousMessages: Message[]
+  ) => Promise<void>;
   listenToConversation: (
     conversationId: string,
     onChange: (conversation: Conversation) => void
@@ -118,10 +122,13 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     return introContext;
   }
 
-  async function callOpenAI(context: Message[]): Promise<OpenAIResponse> {
+  async function callOpenAI(
+    context: Message[],
+    conversationId: string
+  ): Promise<OpenAIResponse> {
     const API_URL = "https://api.openai.com/v1/chat/completions"; // Replace with the appropriate API endpoint
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is set in your environment variables
-
+    console.log(context);
     try {
       const response = await axios.post(
         API_URL,
@@ -139,6 +146,10 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
         }
       );
       console.log(response.data);
+      const conversationRef = doc(db, "conversations", conversationId);
+      await updateDoc(conversationRef, {
+        messages: arrayUnion(response.data.choices[0].message),
+      });
       return response.data;
     } catch (error) {
       console.error("Error calling OpenAI API:", error);
@@ -172,7 +183,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
       console.log(newConversation);
       await setDoc(doc(db, "conversations", newId), newConversation);
       setCurrentConversation(newId);
-      await callOpenAI(messages);
+      await callOpenAI(messages, newId);
       setIsLoading(false);
     } catch (err) {
       console.log(err);
@@ -180,11 +191,20 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     }
   };
 
-  const sendMessage = async (conversationId: string, message: Message) => {
+  const sendMessage = async (
+    conversationId: string,
+    message: Message,
+    previousMessages?: Message[]
+  ) => {
     const conversationRef = doc(db, "conversations", conversationId);
     await updateDoc(conversationRef, {
       messages: arrayUnion(message),
     });
+    if (previousMessages) {
+      let prev = [...previousMessages];
+      prev.push(message);
+      await callOpenAI(prev, conversationId);
+    }
   };
 
   const listenToConversation = (
