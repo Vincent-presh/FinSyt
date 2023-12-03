@@ -36,6 +36,8 @@ export const ChatPage = () => {
         setconversations_e(conversations_e);
         listenToConversation(conversations_e.id, setconversations_e);
       }
+    } else {
+      setMessages([]);
     }
   }, [currentConversation]);
 
@@ -56,7 +58,10 @@ export const ChatPage = () => {
           </header>
           <div className="flex flex-col space-y-2">
             <button
-              onClick={() => setCurrentConversation("")}
+              onClick={() => {
+                setCurrentConversation("");
+                setMessages([]);
+              }}
               className="flex-row space-x-3 bg-slate-50 flex-1 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden"
             >
               <PlusCircle color="grey" />
@@ -67,13 +72,16 @@ export const ChatPage = () => {
                 onClick={() => setCurrentConversation(item?.id ? item.id : "")}
                 className="bg-slate-50 flex-1 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden"
               >
-                {item.messages[1].content}
+                {item?.messages[1]?.content &&
+                item?.messages[1]?.content?.length > 30
+                  ? item.messages[1].content?.slice(0, 31) + "..."
+                  : item.messages[1].content}
               </button>
             ))}
           </div>
         </div>
         <div className="flex-1 h-full relative flex">
-          <div className="absolute space-x-3 bg-slate-50 w-64 top-4 right-4 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden">
+          <div className="absolute space-x-3 bg-slate-50 w-60 top-4 right-4 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden">
             <img
               src={user?.photoUrl}
               alt="profile"

@@ -8,18 +8,20 @@ import {Title} from "../components/ui/Title";
 import {PagesContext} from "../contexts/PagesProvider";
 import {UserContext} from "../contexts/userProvider";
 import {updateUserIncome} from "../functions/updateUserFunctions";
+import {useDebounce} from "@uidotdev/usehooks";
 
 export const Income = () => {
   const [amount, setAmount] = useState("");
   const {nextPage}: any = useContext(PagesContext);
   const {user, setUser, signIn, isLoading}: any = useContext(UserContext);
   const [selectedOption, setSelectedOption] = useState("");
+  const debouncedAmount = useDebounce(amount, 400);
 
   useEffect(() => {
-    if (amount == "") {
+    if (debouncedAmount == "") {
       return;
     }
-    updateUserIncome(user?.id, amount)
+    updateUserIncome(user?.id, debouncedAmount)
       .then(() => {
         console.log("Income updated successfully.");
       })

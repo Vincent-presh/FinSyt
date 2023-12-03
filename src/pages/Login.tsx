@@ -17,8 +17,6 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      nextPage(8);
-      return;
       console.log(user);
       if (!user?.gender) {
         nextPage();
@@ -40,10 +38,12 @@ export const Login = () => {
         nextPage(5);
         return;
       }
-      if (!user?.spendables) {
-        nextPage(6);
-        return;
-      }
+      nextPage(8);
+      return;
+      // if (!user?.spendables) {
+      //   nextPage(6);
+      //   return;
+      // }
     }
   }, [user]);
 
