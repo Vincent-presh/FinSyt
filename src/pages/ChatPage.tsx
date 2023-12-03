@@ -97,7 +97,7 @@ export const ChatPage = () => {
                     <img
                       src={user?.photoUrl}
                       alt="profile"
-                      className="rounded-full mt-2 h-8 w-8"
+                      className="rounded-full mt-1 h-8 w-8"
                     />
                   ) : (
                     <img
@@ -105,7 +105,7 @@ export const ChatPage = () => {
                         "https://firebasestorage.googleapis.com/v0/b/finsyt.appspot.com/o/images.png?alt=media&token=1cd98a77-2a5c-416e-b5fa-546e8c835053"
                       }
                       alt="profile"
-                      className="rounded-full mt-2 h-8 w-8"
+                      className="rounded-full mt-1 h-8 w-8"
                     />
                   )}
                 </div>

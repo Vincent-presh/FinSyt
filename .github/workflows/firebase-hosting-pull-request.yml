@@ -4,6 +4,13 @@
 name: Deploy to Firebase Hosting on PR
 "on": pull_request
 jobs:
+  Create_ENV:
+    runs-on: ubuntu-latest
+    run: |
+      touch .env
+      echo API_ENDPOINT=${{ secrets.API_ENDPOINT }} >> .env
+      echo API_KEY=${{ secrets.API_KEY }} >> .env
+      cat .env
   build_and_preview:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest

@@ -6,6 +6,7 @@ import {
   useConversations,
 } from "../../contexts/ConversationContext";
 import {UserContext} from "../../contexts/userProvider";
+import {Circles} from "react-loader-spinner";
 
 export const ChatInput = ({
   setCurrentConversation,
@@ -13,7 +14,8 @@ export const ChatInput = ({
   messages,
 }: any) => {
   const [message, setMessage] = useState("");
-  const {createConversation, sendMessage} = useContext(ConversationContext);
+  const {createConversation, sendMessage, isLoading} =
+    useContext(ConversationContext);
   const {user}: any = useContext(UserContext);
   return (
     <div className="absolute w-96 bottom-8  mx-auto left-0 right-0  ">
@@ -46,7 +48,19 @@ export const ChatInput = ({
             }
           }}
         >
-          <Send color="grey" size={20} />
+          {isLoading ? (
+            <Circles
+              height="20"
+              width="20"
+              color="blue"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          ) : (
+            <Send color="grey" size={20} />
+          )}
         </button>
       </div>
     </div>

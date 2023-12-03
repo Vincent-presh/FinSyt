@@ -53,6 +53,7 @@ interface ConversationContextType {
     onChange: (conversation: Conversation) => void
   ) => () => void;
   getAllConversationsForUser: (userId: string) => Promise<Conversation[]>;
+  isLoading?: boolean;
 }
 const defaultConversationContext: ConversationContextType = {
   createConversation: async () => {
@@ -106,7 +107,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     }
 
     if (user.income) {
-      introContext += `Income: ${user.income}. `;
+      introContext += `User Income: ${user.income}. `;
     }
 
     if (user.debt) {
@@ -127,7 +128,8 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     conversationId: string
   ): Promise<OpenAIResponse> {
     const API_URL = "https://api.openai.com/v1/chat/completions"; // Replace with the appropriate API endpoint
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is set in your environment variables
+    const OPENAI_API_KEY =
+      "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"; // Ensure the API key is set in your environment variables
     console.log(context);
     try {
       const response = await axios.post(
@@ -135,7 +137,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
         {
           model: "gpt-3.5-turbo",
           messages: context,
-          max_tokens: 150, // Adjust based on your requirements
+          max_tokens: 110, // Adjust based on your requirements
           // Add other parameters as needed
         },
         {
@@ -150,9 +152,11 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
       await updateDoc(conversationRef, {
         messages: arrayUnion(response.data.choices[0].message),
       });
+      setIsLoading(false);
       return response.data;
     } catch (error) {
       console.error("Error calling OpenAI API:", error);
+      setIsLoading(false);
       throw error;
     }
   }
@@ -196,6 +200,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     message: Message,
     previousMessages?: Message[]
   ) => {
+    setIsLoading(true);
     const conversationRef = doc(db, "conversations", conversationId);
     await updateDoc(conversationRef, {
       messages: arrayUnion(message),
@@ -242,6 +247,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
         sendMessage,
         listenToConversation,
         getAllConversationsForUser,
+        isLoading,
       }}
     >
       {children}
