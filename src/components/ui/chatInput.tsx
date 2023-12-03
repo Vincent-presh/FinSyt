@@ -7,25 +7,37 @@ import {
 } from "../../contexts/ConversationContext";
 import {UserContext} from "../../contexts/userProvider";
 
-export const ChatInput = () => {
+export const ChatInput = ({
+  setCurrentConversation,
+  currentConversation,
+}: any) => {
   const [message, setMessage] = useState("");
-  const {createConversation} = useContext(ConversationContext);
+  const {createConversation, sendMessage} = useContext(ConversationContext);
   const {user}: any = useContext(UserContext);
   return (
     <div className="absolute w-96 bottom-8  mx-auto left-0 right-0  ">
       <div className="relative">
         <input
+          value={message}
           onChange={(e) => {
             setMessage(e.target.value);
           }}
-          className=" bg-slate-50 w-96 h-14 p-3 rounded-xl border border-grey-100"
+          className=" bg-slate-50 w-96 h-14 p-3 rounded-xl border border-grey-100 text-primaryLight"
           placeholder="Message here...."
         />
         <button
           className="z-10 absolute top-0 right-3 bottom-0 my-auto"
           onClick={() => {
             if (message.length > 4) {
-              createConversation([user.id], message);
+              setMessage("");
+              if (currentConversation == "") {
+                createConversation([user.id], message, setCurrentConversation);
+              } else {
+                sendMessage(currentConversation, {
+                  role: "user",
+                  content: message,
+                });
+              }
             }
           }}
         >

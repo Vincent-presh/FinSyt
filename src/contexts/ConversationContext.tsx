@@ -40,7 +40,8 @@ interface OpenAIResponse {
 interface ConversationContextType {
   createConversation: (
     participants: string[],
-    userMessage: string
+    userMessage: string,
+    setCurrentConversation: any
   ) => Promise<void>;
   sendMessage: (conversationId: string, message: Message) => Promise<void>;
   listenToConversation: (
@@ -147,7 +148,8 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
 
   const createConversation = async (
     participants: string[],
-    userMessage: string
+    userMessage: string,
+    setCurrentConversation: any
   ) => {
     try {
       setIsLoading(true);
@@ -162,12 +164,14 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
           content: userMessage,
         },
       ];
+      const newId = doc(collection(db, "conversations")).id;
       const newConversation: Conversation = {
         participants,
         messages: messages,
       };
       console.log(newConversation);
-      await setDoc(doc(collection(db, "conversations")), newConversation);
+      await setDoc(doc(db, "conversations", newId), newConversation);
+      setCurrentConversation(newId);
       await callOpenAI(messages);
       setIsLoading(false);
     } catch (err) {

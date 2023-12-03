@@ -6,12 +6,16 @@ import {Title} from "../components/ui/Title";
 import {ChatInput} from "../components/ui/chatInput";
 import {ConversationContext} from "../contexts/ConversationContext";
 import {UserContext} from "../contexts/userProvider";
-import {Conversation} from "../interfaces/User";
+import {Conversation, Message} from "../interfaces/User";
 
 export const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentConversation, setCurrentConversation] = useState("");
   const {user}: any = useContext(UserContext);
-  const {getAllConversationsForUser} = useContext(ConversationContext);
+  const [conversations_e, setconversations_e] = useState<Conversation>();
+  const [messages, setMessages] = useState<Message[]>();
+  const {getAllConversationsForUser, listenToConversation} =
+    useContext(ConversationContext);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -22,21 +26,56 @@ export const ChatPage = () => {
     }
   }, [user, getAllConversationsForUser]);
 
+  useEffect(() => {
+    if (currentConversation !== "") {
+      let conversations_e = conversations.find(
+        (item) => item.id === currentConversation
+      );
+      if (conversations_e !== undefined && conversations_e.id) {
+        setconversations_e(conversations_e);
+        listenToConversation(conversations_e.id, setconversations_e);
+      }
+    }
+  }, [currentConversation]);
+
+  useEffect(() => {
+    let conversation = {...conversations_e};
+    if (conversation.messages) {
+      let messages = conversation.messages.slice(1);
+      setMessages(messages);
+    }
+  }, [conversations_e]);
+
   return (
     <div className="w-full h-screen flex ">
       <div className=" flex flex-row  flex-1">
-        <div className="flex flex-col space-y-3 w-72 py-6 bg-slate-50">
+        <div className="flex flex-col space-y-3 w-72 py-6 bg-slate-50 hidden sm:block">
           <header className="">
             <Logo />
           </header>
-          {conversations?.map((item, index) => (
-            <div className="bg-slate-50 w-100 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm">
-              {item.messages[1].content}
-            </div>
-          ))}
+          <div className="flex flex-col space-y-2">
+            {conversations?.map((item, index) => (
+              <button
+                onClick={() => setCurrentConversation(item?.id ? item.id : "")}
+                className="bg-slate-50 flex-1 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden"
+              >
+                {item.messages[1].content}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex-1 h-full relative">
-          <ChatInput />
+        <div className="flex-1 h-full relative flex">
+          <div className="flex-1 sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20">
+            {messages?.map((item, index) => (
+              <button className=" my-2 bg-slate-50  h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden">
+                {item.content}
+              </button>
+            ))}
+          </div>
+          <ChatInput
+            currentConversation={currentConversation}
+            setCurrentConversation={setCurrentConversation}
+          />
         </div>
       </div>
     </div>
