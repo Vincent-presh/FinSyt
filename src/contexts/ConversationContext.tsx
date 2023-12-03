@@ -16,6 +16,9 @@ import {
   arrayUnion,
   DocumentReference,
   getFirestore,
+  where,
+  getDocs,
+  query,
 } from "firebase/firestore";
 import {Conversation, Message} from "../interfaces/User";
 
@@ -50,11 +53,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     conversationId: string,
     onChange: (conversation: Conversation) => void
   ) => {
-    const conversationRef: DocumentReference<Conversation> = doc(
-      db,
-      "conversations",
-      conversationId
-    );
+    const conversationRef: any = doc(db, "conversations", conversationId);
     return onSnapshot(conversationRef, (doc) => {
       const conversation = {id: doc.id, ...doc.data()} as Conversation;
       onChange(conversation);
