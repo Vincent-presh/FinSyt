@@ -49,8 +49,27 @@ interface ConversationContextType {
   ) => () => void;
   getAllConversationsForUser: (userId: string) => Promise<Conversation[]>;
 }
+const defaultConversationContext: ConversationContextType = {
+  createConversation: async () => {
+    console.warn("createConversation function not implemented");
+  },
+  sendMessage: async () => {
+    console.warn("sendMessage function not implemented");
+  },
+  listenToConversation: () => {
+    console.warn("listenToConversation function not implemented");
+    return () => {};
+  },
+  getAllConversationsForUser: async () => {
+    console.warn("getAllConversationsForUser function not implemented");
+    return [];
+  },
+};
 
-const ConversationContext = createContext<ConversationContextType | null>(null);
+// Create the context with the default value
+export const ConversationContext = createContext<ConversationContextType>(
+  defaultConversationContext
+);
 
 export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -118,7 +137,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
           },
         }
       );
-
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Error calling OpenAI API:", error);
@@ -130,25 +149,31 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     participants: string[],
     userMessage: string
   ) => {
-    setIsLoading(true);
-    const userIntro = createIntroContext(user);
-    let messages = [
-      {
-        role: "system",
-        content: "You are a financial assistant for this user: " + userIntro,
-      },
-      {
-        role: "user",
-        content: userMessage,
-      },
-    ];
-    const newConversation: Conversation = {
-      participants,
-      messages: messages,
-    };
-    await setDoc(doc(collection(db, "conversations")), newConversation);
-    await callOpenAI(messages);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const userIntro = createIntroContext(user);
+      let messages = [
+        {
+          role: "system",
+          content: "You are a financial assistant for this user: " + userIntro,
+        },
+        {
+          role: "user",
+          content: userMessage,
+        },
+      ];
+      const newConversation: Conversation = {
+        participants,
+        messages: messages,
+      };
+      console.log(newConversation);
+      await setDoc(doc(collection(db, "conversations")), newConversation);
+      await callOpenAI(messages);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setIsLoading(false);
+    }
   };
 
   const sendMessage = async (conversationId: string, message: Message) => {
