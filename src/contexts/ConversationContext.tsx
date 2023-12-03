@@ -37,6 +37,47 @@ const ConversationContext = createContext<ConversationContextType | null>(null);
 export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
   const db = getFirestore();
 
+  function createIntroContext(user: User): string {
+    let introContext = `User ID: ${user.id}. `;
+
+    if (user.name) {
+      introContext += `Name: ${user.name}. `;
+    }
+
+    if (user.email) {
+      introContext += `Email: ${user.email}. `;
+    }
+
+    // Optional fields
+    if (user.gender) {
+      introContext += `Gender: ${user.gender}. `;
+    }
+
+    if (user.relationship) {
+      introContext += `Relationship status: ${user.relationship}. `;
+    }
+
+    if (user.dependants) {
+      introContext += `Number of dependants: ${user.dependants}. `;
+    }
+
+    if (user.income) {
+      introContext += `Income: ${user.income}. `;
+    }
+
+    if (user.debt) {
+      introContext += `Debt: ${user.debt}. `;
+    }
+
+    if (user.spendables) {
+      introContext += `Spendable amount: ${user.spendables}. `;
+    }
+
+    // You can include more fields based on what's relevant for the OpenAI conversation
+
+    return introContext;
+  }
+
   const createConversation = async (participants: string[]) => {
     const newConversation: Conversation = {participants, messages: []};
     await setDoc(doc(collection(db, "conversations")), newConversation);
