@@ -7,6 +7,7 @@ import {ChatInput} from "../components/ui/chatInput";
 import {ConversationContext} from "../contexts/ConversationContext";
 import {UserContext} from "../contexts/userProvider";
 import {Conversation, Message} from "../interfaces/User";
+import {PlusCircle} from "react-feather";
 
 export const ChatPage = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -54,6 +55,13 @@ export const ChatPage = () => {
             <Logo />
           </header>
           <div className="flex flex-col space-y-2">
+            <button
+              onClick={() => setCurrentConversation("")}
+              className="flex-row space-x-3 bg-slate-50 flex-1 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden"
+            >
+              <PlusCircle color="grey" />
+              <div className="">New Message</div>
+            </button>
             {conversations?.map((item, index) => (
               <button
                 onClick={() => setCurrentConversation(item?.id ? item.id : "")}
@@ -65,11 +73,32 @@ export const ChatPage = () => {
           </div>
         </div>
         <div className="flex-1 h-full relative flex">
-          <div className="flex-1 sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20">
+          <div className="absolute space-x-3 bg-slate-50 w-64 top-4 right-4 h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden">
+            <img
+              src={user?.photoUrl}
+              alt="profile"
+              className="rounded-full h-7"
+            />
+            <div>{user?.name}</div>
+          </div>
+          <div className=" sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20 overflow-auto pb-24">
             {messages?.map((item, index) => (
-              <button className=" my-2 bg-slate-50  h-12 p-3 rounded-lg border border-grey-100 mx-2 flex items-center text-sm text-primaryLight overflow-hidden">
-                {item.content}
-              </button>
+              <div className=" space-x-5">
+                <div className="rounded-full h-8 w-8 ">
+                  {item.role == "user" ? (
+                    <img
+                      src={user?.photoUrl}
+                      alt="profile"
+                      className="rounded-full mt-2 h-8 w-8"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+                <div className="flex-1 my-2 bg-slate-50  p-3 rounded-lg border border-grey-100 flex items-center text-sm text-primaryLight ">
+                  {item.content}
+                </div>
+              </div>
             ))}
           </div>
           <ChatInput

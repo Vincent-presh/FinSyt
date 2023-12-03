@@ -22,7 +22,7 @@ export const ChatInput = ({
           onChange={(e) => {
             setMessage(e.target.value);
           }}
-          className=" bg-slate-50 w-96 h-14 p-3 rounded-xl border border-grey-100 text-primaryLight"
+          className=" bg-slate-50 w-96 h-14 pl-3 pr-10 rounded-xl border border-grey-100 text-primaryLight"
           placeholder="Message here...."
         />
         <button

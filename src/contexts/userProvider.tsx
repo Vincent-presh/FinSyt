@@ -88,6 +88,7 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
           console.log(token);
           // The signed-in user info.
           const user = result.user;
+
           if (user && user.email !== undefined) {
             const isNewUser =
               new Date(user.metadata?.creationTime || "")?.getTime() ===
@@ -96,6 +97,7 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
               email: user.email as string,
               name: user?.displayName as string,
               id: user?.uid,
+              photoUrl: user?.photoURL,
               metadata: {
                 creationTime: user.metadata?.creationTime,
                 lastSignInTime: user.metadata?.lastSignInTime,
@@ -164,7 +166,11 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUser(await fetchUserData(user.uid));
+        let user_e = await fetchUserData(user.uid);
+        if (user_e) {
+          user_e["photoUrl"] = user?.photoURL;
+          setUser(user_e);
+        }
       }
     });
   }, []);

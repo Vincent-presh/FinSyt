@@ -3,6 +3,7 @@ export interface User {
   name: string | null;
   email: string | null;
   gender?: null;
+  photoUrl?: string | null;
   relationship?: null;
   dependants?: null;
   income?: null;
