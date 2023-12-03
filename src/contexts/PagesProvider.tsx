@@ -33,6 +33,7 @@ export const PagesProvider = ({children}: any) => {
     <TransHistory />,
     <ChatPage />,
   ];
+  
   const nextPage = (index?: number) => {
     setCurrentIndex(index ? index : currentIndex + 1);
   };

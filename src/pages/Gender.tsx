@@ -6,7 +6,6 @@ import {Title} from "../components/ui/Title";
 import {PagesContext} from "../contexts/PagesProvider";
 import {InputBtn} from "../components/ui/InputBtn";
 import {UserContext} from "../contexts/userProvider";
-
 export const Gender = () => {
   const {nextPage}: any = useContext(PagesContext);
   const {user, setUser, signIn, isLoading}: any = useContext(UserContext);
@@ -16,6 +15,7 @@ export const Gender = () => {
     {title: "male", name: "male"},
     {title: "female", name: "female"},
   ];
+
   return (
     <Background>
       <header>

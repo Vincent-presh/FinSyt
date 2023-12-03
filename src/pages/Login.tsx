@@ -17,13 +17,11 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      nextPage(8);
-      return;
       if (!user?.gender) {
         nextPage();
         return;
       }
-      if (!user?.relationshipt) {
+      if (!user?.relationship) {
         nextPage(2);
         return;
       }
