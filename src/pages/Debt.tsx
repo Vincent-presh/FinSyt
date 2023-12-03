@@ -4,6 +4,7 @@ import { BtnUI } from "../components/ui/Btn";
 import { Title } from "../components/ui/Title";
 
 export const Debt = () => {
+   
    return (
       <Background>
          <header>
@@ -21,6 +22,10 @@ export const Debt = () => {
                <BtnUI
                   type={'primary'}
                   title={'Continue'}
+                  value={}
+                  onClick={() => {
+
+                  }}
                />
             </section>
          </main>

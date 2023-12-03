@@ -1,9 +1,19 @@
+import { useContext, useState } from "react";
 import { Background } from "../components/ui/Background"
 import { BtnUI } from "../components/ui/Btn";
+import { InputUI } from "../components/ui/Input";
 import { Logo } from "../components/ui/Logo"
+import { Main } from "../components/ui/Main";
 import { Title } from "../components/ui/Title"
+import { PagesContext } from "../contexts/PagesProvider";
+import { UserContext } from "../contexts/userProvider";
 
 export const Income = () => {
+
+   const [amount, setAmount] = useState('');
+   const {nextPage}: any = useContext(PagesContext);
+   const {user, setUser, signIn, isLoading}: any = useContext(UserContext);
+
    return (
       <Background>
          <header>
@@ -17,10 +27,26 @@ export const Income = () => {
                />
             </section>
 
+            <Main>
+               <section>
+                  <InputUI
+                     type={'text'}
+                     placeholder={'Type your monthly income'}
+                     value={amount}
+                     onChange={(e: number | string)  => {
+                        e.target.value
+                     }}
+                  />
+               </section>
+            </Main>
+
             <section>
                <BtnUI
                   type={'primary'}
                   title={'Continue'}
+                  onClick={() => {
+                     nextPage()
+                  }}
                />
             </section>
          </main>
