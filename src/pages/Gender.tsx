@@ -6,6 +6,7 @@ import {Title} from "../components/ui/Title";
 import {PagesContext} from "../contexts/PagesProvider";
 import {InputBtn} from "../components/ui/InputBtn";
 import {UserContext} from "../contexts/userProvider";
+import { Main } from "../components/ui/Main";
 export const Gender = () => {
   const {nextPage}: any = useContext(PagesContext);
   const {user, setUser, signIn, isLoading}: any = useContext(UserContext);
@@ -21,7 +22,7 @@ export const Gender = () => {
       <header>
         <Logo />
       </header>
-      <main className="w-full space-y-6">
+      
         <section className="w-full">
           <Title
             title={"Hello, " + user?.name}
@@ -29,29 +30,30 @@ export const Gender = () => {
           />
         </section>
 
-        <section>
-          <div className="flex w-full flex-col space-y-5">
-            {genders.map((gender) => (
-              <InputBtn
-                title={gender.title}
-                name={gender.name}
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
-              />
-            ))}
-          </div>
-        </section>
+        <Main>
+          <section>
+            <div className="flex w-full flex-col space-y-5">
+              {genders.map((gender) => (
+                <InputBtn
+                  title={gender.title}
+                  name={gender.name}
+                  selectedOption={selectedOption}
+                  setSelectedOption={setSelectedOption}
+                />
+              ))}
+            </div>
+          </section>
 
-        <section>
-          <BtnUI
-            type={"primary"}
-            title={"Continue"}
-            onClick={() => {
-              nextPage();
-            }}
-          />
-        </section>
-      </main>
+          <section>
+            <BtnUI
+              type={"primary"}
+              title={"Continue"}
+              onClick={() => {
+                nextPage();
+              }}
+            />
+          </section>
+      </Main>
     </Background>
   );
 };
