@@ -15,7 +15,7 @@ export interface User {
 export interface Message {
   senderId: string;
   text: string;
-  timestamp: firebase.firestore.Timestamp;
+  timestamp: any;
 }
 
 export interface Conversation {
