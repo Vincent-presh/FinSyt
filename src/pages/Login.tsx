@@ -10,7 +10,7 @@ import {UserContext} from "../contexts/userProvider";
 import {toast} from "react-toastify";
 
 export const Login = () => {
-  const {nextPage}: any = useContext(PagesContext);
+  const {nextPage, currentIndex}: any = useContext(PagesContext);
   const {user, setUser, signIn, isLoading}: any = useContext(UserContext);
   const [male, setMale] = useState(false);
   const [female, setFeMale] = useState(false);
@@ -18,8 +18,8 @@ export const Login = () => {
   useEffect(() => {
     if (user) {
       console.log(user);
-      if (!user?.gender) {
-        nextPage();
+      if (!user?.gender && currentIndex != 2) {
+        nextPage(1);
         return;
       }
       if (!user?.relationship) {
@@ -74,7 +74,7 @@ export const Login = () => {
             }
             onClick={async () => {
               if ((await signIn()) === true) {
-                toast("Login Successful!");
+                // toast("Login Successful!");
               }
             }}
           />

@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REACT_APP_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - run: npm i -D env-cmd
-      - run: npm ci && env-cmd -f OPENAI_API_KEY=${{secrets.OPENAI_API_KEY}} npm run build
+      - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

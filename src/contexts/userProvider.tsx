@@ -113,7 +113,7 @@ export const UserProvider: FC<{children: ReactNode}> = ({children}) => {
             } else {
               //if user is already registered
               setUser(auth_user);
-              // toast("Login Successful!");
+              toast("Login Successful!");
               setIsLoading(false);
               return true;
             }

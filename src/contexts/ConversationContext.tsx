@@ -128,7 +128,7 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
     conversationId: string
   ): Promise<OpenAIResponse> {
     const API_URL = "https://api.openai.com/v1/chat/completions"; // Replace with the appropriate API endpoint
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Ensure the API key is set in your environment variables
+    const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY; // Ensure the API key is set in your environment variables
     console.log(context);
     try {
       const response = await axios.post(
@@ -171,7 +171,10 @@ export const ConversationProvider: FC<{children: ReactNode}> = ({children}) => {
       let messages = [
         {
           role: "system",
-          content: "You are a financial assistant for this user: " + userIntro,
+          content:
+            "Your name is Finsyt AI. You are a financial assistant for this user: " +
+            userIntro +
+            ", Provide budgets, tailored advice, predictive analytics, and user-friendly tools to make financial planning easier for this user, Use naira and Nigerian context for all analysis, using current market trends.",
         },
         {
           role: "user",

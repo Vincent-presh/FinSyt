@@ -89,7 +89,7 @@ export const ChatPage = () => {
             />
             <div>{user?.name}</div>
           </div>
-          <div className=" sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20 overflow-auto pb-24">
+          <div className=" sm:mx-20 md:mx-[10%] lg:mx-[12%]  mt-20 overflow-auto pb-24 w-full">
             {messages?.slice(1)?.map((item, index) => (
               <div className=" space-x-5">
                 <div className="rounded-full h-8 w-8 ">
@@ -97,7 +97,7 @@ export const ChatPage = () => {
                     <img
                       src={user?.photoUrl}
                       alt="profile"
-                      className="rounded-full mt-1 h-8 w-8"
+                      className="rounded-full mt-2 h-8 w-8"
                     />
                   ) : (
                     <img
